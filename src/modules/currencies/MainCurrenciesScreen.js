@@ -4,7 +4,8 @@ import {
   ActivityIndicator,
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from 'react-native';
 import {connect} from 'react-redux';
 import {fetchCurrancies} from './actions';
@@ -16,6 +17,16 @@ class MainCurrenciesScreen extends Component {
     this.props.fetchCurrancies();
     setInterval(() => this.props.fetchCurrancies(), 15000);
   }
+
+  _keyExtractor = (item, index) => item.symbol;
+
+  _renderItem = ({item}) => (
+    <View style={{flexDirection: 'row', marginHorizontal: 10, borderWidth: 1, borderColor: 'black', marginVertical: 2, paddingVertical: 2, paddingHorizontal: 5}}>
+      <View style={{flex: 1, alignItems: 'flex-start'}}><Text>{item.name}</Text></View>
+      <View style={{flex: 1, alignItems: 'center'}}><Text>{item.volume}</Text></View>
+      <View style={{flex: 1, alignItems: 'flex-end'}}><Text>{item.price.amount.toFixed(2)}</Text></View>
+    </View>
+  );
 
 
   render(){
@@ -46,6 +57,11 @@ class MainCurrenciesScreen extends Component {
 
         { !isFetching && success && stock.length > 0 &&
           <View>
+            <FlatList
+              data={this.props.currencies.stock}
+              keyExtractor={this._keyExtractor}
+              renderItem={this._renderItem}
+              />
 
           </View>
 

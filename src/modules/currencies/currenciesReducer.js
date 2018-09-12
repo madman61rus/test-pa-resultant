@@ -25,7 +25,7 @@ export default function currenciesReducer(state = initState, action) {
       return {
         ...state,
         isFetching: false,
-        success: true
+        success: action.payload
       }
     case types.CURRANCIES_SET_ERRORS:
       return {

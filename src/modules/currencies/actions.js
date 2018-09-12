@@ -9,10 +9,17 @@ const curranciesIsFetching = (state) => {
     }
 }
 
-const fetchCurranciesSuccess = (currancies) => {
+const addCurrancies = (currancies) => {
+  return {
+    type: types.ADD_CURRANCIES,
+    payload: currancies
+  }
+}
+
+const fetchCurranciesSuccess = (state) => {
     return {
-        type: types.ADD_CURRANCIES,
-        payload: currancies
+        type: types.CURRANCIES_SET_SUCCESS,
+        payload: state
     }
 }
 
@@ -32,9 +39,11 @@ export const fetchCurrancies = () => {
 
         axios.get(fullUrl)
             .then((response) => {
-                dispatch(fetchCurranciesSuccess(response.data.stock));
+              dispatch(addCurrancies(response.data.stock));
+              dispatch(fetchCurranciesSuccess(true));
             }).catch((error) => {
             dispatch(curranciesFetchingErrors(errors))
+            dispatch(fetchCurranciesSuccess(false));
         });
 
     }
