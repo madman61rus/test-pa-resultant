@@ -8,5 +8,8 @@ const initState = {
 } 
 
 export default function currenciesReducer(state = initState, action) {
-
+  switch (action) {
+    default:
+      return state
+  }
 }
