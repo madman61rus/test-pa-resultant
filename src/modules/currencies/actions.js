@@ -40,7 +40,6 @@ export const fetchCurrancies = () => {
         axios.get(fullUrl)
             .then((response) => {
               dispatch(addCurrancies(response.data.stock));
-              dispatch(fetchCurranciesSuccess(true));
             }).catch((error) => {
             dispatch(curranciesFetchingErrors(errors))
             dispatch(fetchCurranciesSuccess(false));

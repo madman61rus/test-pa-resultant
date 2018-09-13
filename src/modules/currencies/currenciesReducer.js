@@ -10,10 +10,10 @@ const initState = {
 export default function currenciesReducer(state = initState, action) {
   switch (action.type) {
     case types.ADD_CURRANCIES:
-      console.log('payload', action.payload)
       return {
             ...state,
             isFetching: false,
+            success: true,
             stock: action.payload
         }
     case types.CURRANCIES_FETCHING:

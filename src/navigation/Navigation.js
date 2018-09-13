@@ -1,12 +1,14 @@
 import React from 'react';
-import {createStackNavigator} from 'react-navigation';
+import {createDrawerNavigator} from 'react-navigation';
 import MainCurrenciesScreen from '../modules/currencies/MainCurrenciesScreen';
+import MainScreen from '../modules/main/MainScreen';
 
-const RootStack = createStackNavigator ({
-    MainCurrencies: MainCurrenciesScreen,
+const RootStack = createDrawerNavigator ({
+    Main: {screen: MainScreen, navigationOptions:{title: 'Main'}},
+    MainCurrencies: {screen: MainCurrenciesScreen, navigationOptions:{title: 'Currencies'}},
   },
   {
-    initialRouteName: 'MainCurrencies',
+    initialRouteName: 'Main',
     headerMode: 'none'
   }
 );
