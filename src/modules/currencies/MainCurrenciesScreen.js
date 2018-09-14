@@ -14,30 +14,28 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 class MainCurrenciesScreen extends Component {
 
-  
+
   componentDidMount(){
+    this.props.navigation.addListener('willBlur', () => clearInterval(interval));
     this.props.fetchCurrancies();
-    setInterval(() => this.props.fetchCurrancies(), 15000);
+    const interval = setInterval(() => this.props.fetchCurrancies(), 15000);
   }
 
-  shouldComponentUpdate(nextProps){
-    return this.props.currencies.isFetching !== nextProps.currencies.isFetching
-  }
 
   _keyExtractor = (item, index) => item.symbol + index;
 
-  _renderItem = ({item}) => console.log('render') || (
-    <View style={{flexDirection: 'row', marginHorizontal: 10, borderWidth: 1, borderColor: 'black', marginVertical: 2, paddingVertical: 2, paddingHorizontal: 5}}>
-      <View style={{flex: 1, alignItems: 'flex-start'}}><Text>{item.name}</Text></View>
-      <View style={{flex: 1, alignItems: 'center'}}><Text>{item.volume}</Text></View>
-      <View style={{flex: 1, alignItems: 'flex-end'}}><Text>{item.price.amount.toFixed(2)}</Text></View>
+  _renderItem = ({item}) => (
+    <View style={styles.row}>
+      <View style={styles.leftBlock}><Text>{item.name}</Text></View>
+      <View style={styles.centerBlock}><Text>{item.volume}</Text></View>
+      <View style={styles.rightBlock}><Text>{item.price.amount.toFixed(2)}</Text></View>
     </View>
   );
 
-  _header = () => <View style={{flexDirection: 'row', marginHorizontal: 10, marginVertical: 2, paddingVertical: 2, paddingHorizontal: 5}}>
-  <View style={{flex: 1, alignItems: 'flex-start'}}><Text>Name</Text></View>
-  <View style={{flex: 1, alignItems: 'center'}}><Text>Amount</Text></View>
-  <View style={{flex: 1, alignItems: 'flex-end'}}><Text>Price</Text></View>
+  _header = () => <View style={styles.header}>
+  <View style={styles.leftBlock}><Text>Name</Text></View>
+  <View style={styles.centerBlock}><Text>Amount</Text></View>
+  <View style={styles.rightBlock}><Text>Price</Text></View>
   </View>
 
 
@@ -50,23 +48,24 @@ class MainCurrenciesScreen extends Component {
               <Icon name="chevron-left" size={15} color="#2f3542" />
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center'}}>
-          <Text style={{color: '#2f3542', fontSize: 17, fontWeight: 'bold'}}>Currencies</Text>
+          <View style={styles.centerBlock}>
+          <Text style={styles.title}>Currencies</Text>
           </View>
           <View style={{flex: 1, alignItems: 'flex-end', paddingRight: 10}}>
             <TouchableOpacity onPress={() => this.props.fetchCurrancies()}>
-              <Text style={{color: '#2f3542'}}>Update</Text>
+              { this.props.currencies.isFetching ?
+                <View style={styles.indicatorContainer}>
+                  <ActivityIndicator size="small" color="#0000ff" />
+                </View>
+                :
+
+                <Text style={{color: '#2f3542'}}>Update</Text>
+              }
             </TouchableOpacity>
           </View>
         </View>
 
-        { this.props.currencies.isFetching && 
-          <View style={styles.indicatorContainer}>
-          <ActivityIndicator size="large" color="#0000ff" />
-          </View>
-        }
-
-        { !this.props.currencies.isFetching && this.props.currencies.success && this.props.stock.length > 0 &&
+        { console.log('render ') || this.props.stock.length > 0 &&
           <View>
             <FlatList
               data={this.props.stock}
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#dfe4ea',
-    marginTop: Platform.OS !== 'ios' ? 15 : 30 
+    marginTop: Platform.OS !== 'ios' ? 15 : 30
   },
   indicatorContainer: {
     flex: 1,
@@ -103,6 +102,39 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#95a5a6'
+  },
+  header: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+    marginVertical: 2,
+    paddingVertical: 2,
+    paddingHorizontal: 5
+  },
+  title: {
+    color: '#2f3542',
+    fontSize: 17,
+    fontWeight: 'bold'
+  },
+  row: {
+    flexDirection: 'row',
+    marginHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginVertical: 2,
+    paddingVertical: 2,
+    paddingHorizontal: 5
+  },
+  leftBlock: {
+    flex: 1,
+    alignItems: 'flex-start'
+  },
+  rightBlock: {
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+  centerBlock: {
+    flex: 1,
+    alignItems: 'center'
   }
 });
 const mapStateToProps = (state) => {
